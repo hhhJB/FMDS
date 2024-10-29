@@ -3,7 +3,6 @@ from BaseNode import NodeBase, NodeTag
 from PersonNode import PersonNode
 from GroupNode import GroupNode
 
-
 class NodeManager:
     def __init__(self):
         self.next_id = 1
