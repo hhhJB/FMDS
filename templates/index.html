@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>通讯录管理系统</title>
+    <style>
+        /* 一些基本样式 */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>通讯录</h1>
+    <form action="/add" method="post">
+        <input type="text" name="name" placeholder="姓名" required>
+        <input type="text" name="phone" placeholder="电话" required>
+        <button type="submit">添加</button>
+    </form>
+
+    <h2>联系人列表</h2>
+    <ul id="contact-list">
+        {% for name, phone in contacts.items() %}
+            <li>
+                {{ name }}: {{ phone }}
+                <button onclick="deleteContact('{{ name }}')">删除</button>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <script>
+        function deleteContact(name) {
+            if (confirm('确定要删除这个联系人吗？')) {
+                // 创建一个表单并提交到后端
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '/delete'; // 提交到删除路由
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'name';
+                input.value = name;
+                form.appendChild(input);
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+    </script>
+</body>
+</html>
+
