@@ -14,4 +14,3 @@ class GroupNode(NodeBase):
         res["coef"] = self.relation_coefficient
         return res
     
-    222
