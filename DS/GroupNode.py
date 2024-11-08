@@ -13,3 +13,5 @@ class GroupNode(NodeBase):
         res = super().to_jsonable_object()
         res["coef"] = self.relation_coefficient
         return res
+    
+    222
