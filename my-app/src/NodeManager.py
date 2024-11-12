@@ -18,7 +18,7 @@ class NodeManager:
 
         for idx in range(len(self.nodes)):
             if self.nodes[idx] == node:
-                # 解除组织和好友关系
+                # 解除组织和好友关�?
                 for relation_node in node.relations:
                     relation_node.remove_relation(node, False)
 
@@ -62,7 +62,7 @@ class NodeManager:
 
         paths = [] #存储所有路径的列表
         for nei in nowNode.relations:
-            if (nei.tag == NodeTag.PERSON) and all(item not in GroupList for item in nei.relations) and nei not in path: #满足条件：是person、不在共用群组、不重复path中
+            if (nei.tag == NodeTag.PERSON) and all(item not in GroupList for item in nei.relations) and nei not in path: #满足条件：是person、不在共用群组、不重复path�?
                 newPaths = self.getTwoPersonPath(startNode,endNode,nei,GroupList,path)
                 for newPath in newPaths:
                     paths.append(newPath)
@@ -78,13 +78,13 @@ class NodeManager:
 
     
     def calculateTwoPersonIntimacy(self,node1:PersonNode,node2:PersonNode) -> float:
-        #计算1：共同群组权值之和
+        #计算1：共同群组权值之�?
         GroupList = self.getSameGroupList(node1,node2)
         sum_coefficient = 0.0
         for group in GroupList:
             sum_coefficient += group.relation_coefficient
         
-        #计算2:2个人的可达成路径权值之和
+        #计算2:2个人的可达成路径权值之�?
         sum_relation_coefficient = 0.0
         TwoPersonPath = self.getTwoPersonPath(node1,node2,GroupList)
 
