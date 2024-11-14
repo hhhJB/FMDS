@@ -1,0 +1,11 @@
+{
+    "compilerOptions": {
+        "target": "es2016", /* 设置生成的 JavaScript 版本 */
+        "module": "commonjs", /* 使用 CommonJS 模块系统 */
+        "jsx": "react-jsx", /* 启用 JSX 支持，适用于 React 17+ */
+        "esModuleInterop": true, /* 允许与 CommonJS 模块兼容的模块导入 */
+        "forceConsistentCasingInFileNames": true, /* 强制文件名大小写一致 */
+        "strict": true, /* 启用所有严格类型检查 */
+        "skipLibCheck": true /* 跳过库文件的类型检查 */
+    }
+}

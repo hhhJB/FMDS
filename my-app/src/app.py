@@ -3,52 +3,52 @@ from typing import List
 from NodeManager import NodeManager
 from GroupNode import GroupNode
 from BaseNode import NodeBase, NodeTag
-app = Flask(__name__)  # ´´½¨ Flask Ó¦ÓÃÊµÀı
+app = Flask(__name__)  # åˆ›å»º Flask åº”ç”¨å®ä¾‹
 
-# ´´½¨ NodeManager ÊµÀı
+# åˆ›å»º NodeManager å®ä¾‹
 node_manager = NodeManager()
 
-# Â·ÓÉ£º»ñÈ¡ËùÓĞ½ÚµãÊı¾İ
+# è·¯ç”±ï¼šè·å–æ‰€æœ‰èŠ‚ç‚¹æ•°æ®
 @app.route('/api/nodes', methods=['GET'])
 def get_nodes():
-    # »ñÈ¡ËùÓĞ½Úµã²¢×ª»»Îª JSON ¿ÉĞòÁĞ»¯µÄ¸ñÊ½
+    # è·å–æ‰€æœ‰èŠ‚ç‚¹å¹¶è½¬æ¢ä¸º JSON å¯åºåˆ—åŒ–çš„æ ¼å¼
     return jsonify([node.to_jsonable_object() for node in node_manager.nodes])
 
-# Â·ÓÉ£ºÌí¼ÓÒ»¸öĞÂµÄ×éÖ¯½Úµã
+# è·¯ç”±ï¼šæ·»åŠ ä¸€ä¸ªæ–°çš„ç»„ç»‡èŠ‚ç‚¹
 @app.route('/api/addOrganization', methods=['POST'])
 def add_organization():
-    data = request.json  # »ñÈ¡Ç°¶Ë´«À´µÄ JSON Êı¾İ
+    data = request.json  # è·å–å‰ç«¯ä¼ æ¥çš„ JSON æ•°æ®
     name = data.get('name')
     node_tag = data.get('nodeTag')
-    coef = data.get('coef', 1.0)  # Ä¬ÈÏÎª 1.0
+    coef = data.get('coef', 1.0)  # é»˜è®¤ä¸º 1.0
 
     if not name or not node_tag:
-        return jsonify({"message": "Ãû³Æ»ò·ÖÀà²»ÄÜÎª¿Õ"}), 400
+        return jsonify({"message": "åç§°æˆ–åˆ†ç±»ä¸èƒ½ä¸ºç©º"}), 400
     
-    # ´´½¨ĞÂµÄ×éÖ¯½Úµã²¢Ê¹ÓÃ NodeManager Ìí¼Ó
+    # åˆ›å»ºæ–°çš„ç»„ç»‡èŠ‚ç‚¹å¹¶ä½¿ç”¨ NodeManager æ·»åŠ 
     new_organization = GroupNode(name=name, tag=node_tag, coefficient=coef)
-    node_manager.insert(new_organization)  # µ÷ÓÃ NodeManager µÄ insert ·½·¨
+    node_manager.insert(new_organization)  # è°ƒç”¨ NodeManager çš„ insert æ–¹æ³•
 
-    return jsonify({"message": "×éÖ¯Ìí¼Ó³É¹¦"}), 200
+    return jsonify({"message": "ç»„ç»‡æ·»åŠ æˆåŠŸ"}), 200
 
-# Â·ÓÉ£º¸ù¾İ ID »ñÈ¡Ä³¸ö½Úµã
+# è·¯ç”±ï¼šæ ¹æ® ID è·å–æŸä¸ªèŠ‚ç‚¹
 @app.route('/api/nodes/<int:node_id>', methods=['GET'])
 def get_node_by_id(node_id):
     node = node_manager.get_node_by_id(node_id)
     if node:
         return jsonify(node.to_jsonable_object())
     else:
-        return jsonify({"message": "½Úµã²»´æÔÚ"}), 404
+        return jsonify({"message": "èŠ‚ç‚¹ä¸å­˜åœ¨"}), 404
 
-# Â·ÓÉ£ºÒÆ³ıÄ³¸ö½Úµã
+# è·¯ç”±ï¼šç§»é™¤æŸä¸ªèŠ‚ç‚¹
 @app.route('/api/removeNode/<int:node_id>', methods=['DELETE'])
 def remove_node(node_id):
     node = node_manager.get_node_by_id(node_id)
     if node:
-        node_manager.remove(node)  # µ÷ÓÃ NodeManager µÄ remove ·½·¨
-        return jsonify({"message": "½ÚµãÒÑÉ¾³ı"})
+        node_manager.remove(node)  # è°ƒç”¨ NodeManager çš„ remove æ–¹æ³•
+        return jsonify({"message": "èŠ‚ç‚¹å·²åˆ é™¤"})
     else:
-        return jsonify({"message": "½Úµã²»´æÔÚ"}), 404
+        return jsonify({"message": "èŠ‚ç‚¹ä¸å­˜åœ¨"}), 404
 
 if __name__ == '__main__':
     app.run(debug=True)
