@@ -1,10 +1,8 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Button, Drawer, Input, message, Modal, notification, Select, Upload } from 'antd';
-import { DefaultOptionType } from 'antd/lib/select'
-import { RcFile } from 'antd/lib/upload'
-import { FilterFunc } from 'rc-select/lib/Select'
+import { Button, Modal, Input, message, Select } from 'antd';
 
+// 定义节点接口
 interface Node {
     id: number;
     name: string;
@@ -12,30 +10,23 @@ interface Node {
     coef?: number;
 }
 
-interface AppState {
-    nodes: Node[];
-    nodeSelected: Node | null;
-    relationDrawerVisible: boolean;
-    recommendFriendDrawerVisible: boolean;
-}
+const App = () => {
+    // 使用 useState 来管理状态
+    const [nodes, setNodes] = useState<Node[]>([]);  // 存储节点数据
+    const [nodeSelected, setNodeSelected] = useState<Node | null>(null);  // 当前选中的节点
+    const [relationDrawerVisible, setRelationDrawerVisible] = useState<boolean>(false);  // 控制关系面板的显示
+    const [recommendFriendDrawerVisible, setRecommendFriendDrawerVisible] = useState<boolean>(false);  // 控制推荐面板的显示
 
-class App extends Component<{}, AppState> {
-    state = {
-        nodes: [] as Node[],  // 存储节点数据
-        nodeSelected: null,  // 当前选中的节点
-        relationDrawerVisible: false,  // 控制关系面板的显示
-        recommendFriendDrawerVisible: false,  // 控制推荐面板的显示
-    };
-
-    componentDidMount() {
-        this.fetchNodes();  // 加载节点数据
-    }
+    // 使用 useEffect 替代 componentDidMount
+    useEffect(() => {
+        fetchNodes();  // 组件加载后获取节点数据
+    }, []);  // 空数组表示只在组件挂载时执行一次
 
     // 获取所有节点数据
-    fetchNodes = () => {
+    const fetchNodes = () => {
         axios.get('http://localhost:5000/api/nodes')
             .then(response => {
-                this.setState({ nodes: response.data });
+                setNodes(response.data);  // 更新节点数据
             })
             .catch(error => {
                 message.error("获取节点数据失败！");
@@ -43,22 +34,8 @@ class App extends Component<{}, AppState> {
             });
     };
 
-
-    // 添加组织节点
-    addOrganization = (name: string, nodeTag: string, coef: number = 1.0) => {
-        axios.post('http://localhost:5000/api/addOrganization', { name, nodeTag, coef })
-            .then(() => {
-                message.success("组织添加成功！");
-                this.fetchNodes();  // 重新加载节点数据
-            })
-            .catch(error => {
-                message.error("添加组织失败！");
-                console.error("添加组织时出错：", error);
-            });
-    };
-
     // 显示添加组织的弹窗
-    showAddOrganizationModal() {
+    const showAddOrganizationModal = () => {
         let name = '';
         let nodeTag = '';
         let coef = 1.0;
@@ -76,13 +53,22 @@ class App extends Component<{}, AppState> {
                     message.warning('没有选择分类，未保存。');
                 } else {
                     // 发送 POST 请求到 Flask 后端
-                    axios.post('http://localhost:5000/api/addOrganization', { name, nodeTag, coef })
+                    axios.post('http://localhost:5000/api/addOrganization',
+                        { name, nodeTag, coef },
+                        {
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
+                        }
+                    )
                         .then(() => {
-                            this.fetchNodes();  // 刷新节点数据
+                            message.success("组织添加成功！");
+                            fetchNodes();  // 重新加载节点数据
                         })
                         .catch(error => {
-                            message.error('添加组织失败。');
-                        })
+                            message.error("添加组织失败！");
+                            console.error("添加组织时出错：", error);
+                        });
                 }
             },
             content: (
@@ -99,14 +85,14 @@ class App extends Component<{}, AppState> {
                 </div>
             ),
         });
-    }
+    };
 
     // 删除节点
-    removeNode = (nodeId: number) => {
+    const removeNode = (nodeId: number) => {
         axios.delete(`http://localhost:5000/api/removeNode/${nodeId}`)
             .then(() => {
                 message.success("节点删除成功！");
-                this.fetchNodes();  // 重新加载节点数据
+                fetchNodes();  // 重新加载节点数据
             })
             .catch(error => {
                 message.error("删除节点失败！");
@@ -114,21 +100,19 @@ class App extends Component<{}, AppState> {
             });
     };
 
-    render() {
-        return (
-            <div>
-                <Button onClick={this.showAddOrganizationModal}>添加组织</Button>
-                <ul>
-                    {this.state.nodes.map(node => (
-                        <li key={node.id}>
-                            {node.name} - {node.tag} - {node.coef}
-                            <Button onClick={() => this.removeNode(node.id)} type="link">删除</Button>
-                        </li>
-                    ))}
-                </ul>
-            </div>
-        );
-    }
-}
+    return (
+        <div>
+            <Button onClick={showAddOrganizationModal}>添加组织</Button>
+            <ul>
+                {nodes.map(node => (
+                    <li key={node.id}>
+                        {node.name} - {node.tag} - {node.coef}
+                        <Button onClick={() => removeNode(node.id)} type="link">删除</Button>
+                    </li>
+                ))}
+            </ul>
+        </div>
+    );
+};
 
 export default App;

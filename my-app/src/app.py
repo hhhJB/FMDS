@@ -1,12 +1,22 @@
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 from typing import List
 from NodeManager import NodeManager
 from GroupNode import GroupNode
 from BaseNode import NodeBase, NodeTag
+
 app = Flask(__name__)  # 创建 Flask 应用实例
+CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 # 创建 NodeManager 实例
 node_manager = NodeManager()
+
+#test
+node_manager.insert(NodeBase("唐龙",NodeTag.PERSON,1))
+node_manager.insert(NodeBase("唐子送",NodeTag.PERSON,2))
+node_manager.insert(NodeBase("王静波",NodeTag.PERSON,3))
+node_manager.insert(NodeBase("礼盒配",NodeTag.PERSON,4))
+#endtest
 
 # 路由：获取所有节点数据
 @app.route('/api/nodes', methods=['GET'])
@@ -29,7 +39,9 @@ def add_organization():
     new_organization = GroupNode(name=name, tag=node_tag, coefficient=coef)
     node_manager.insert(new_organization)  # 调用 NodeManager 的 insert 方法
 
-    return jsonify({"message": "组织添加成功"}), 200
+    response = {"message": "组织添加成功"}
+    print("响应数据：", response)  # 打印响应数据
+    return jsonify(response), 200
 
 # 路由：根据 ID 获取某个节点
 @app.route('/api/nodes/<int:node_id>', methods=['GET'])
