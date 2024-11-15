@@ -128,7 +128,7 @@ export class RelationChart extends React.Component<RelationChartProps> {
             series: [{
                 type: 'graph',
                 layout: 'force',
-                symbolSize: 45,
+                symbolSize: 66,
                 focusNodeAdjacency: true,
                 roam: true,
 
@@ -286,7 +286,7 @@ export class RelationChart extends React.Component<RelationChartProps> {
             series: [{
                 type: 'graph',
                 layout: 'force',
-                symbolSize: 45,
+                symbolSize: 66,
                 focusNodeAdjacency: true,
                 roam: true,
 

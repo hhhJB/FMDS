@@ -1,4 +1,4 @@
-import { CloseOutlined, DeleteOutlined, DownloadOutlined, ImportOutlined, InfoCircleOutlined, PlusOutlined, SaveOutlined, StarOutlined, UnorderedListOutlined } from '@ant-design/icons'
+import { CloseOutlined, DeleteOutlined, DownloadOutlined, ImportOutlined, InfoCircleOutlined, PlusOutlined, SaveOutlined, MenuUnfoldOutlined, StarOutlined, UnorderedListOutlined } from '@ant-design/icons'
 import { Button, Drawer, Input, message, Modal, notification, Select, Upload } from 'antd'
 import { DefaultOptionType } from 'antd/lib/select'
 import { RcFile } from 'antd/lib/upload'
@@ -23,7 +23,10 @@ type AppState = {
     relationDrawerVisible: boolean,
 
     /** 好友推荐抽屉是否可见。 */
-    recommendFriendDrawerVisible: boolean
+    recommendFriendDrawerVisible: boolean,
+
+    /**侧边栏 */
+    isSidebarOpen: boolean;
 }
 
 /**
@@ -33,8 +36,16 @@ export default class AppMain extends React.Component<any, AppState> {
     state: AppState = {
         nodeSelected: null,
         relationDrawerVisible: false,
-        recommendFriendDrawerVisible: false
+        recommendFriendDrawerVisible: false,
+        isSidebarOpen: false,
     }
+
+    // 控制侧边栏的打开/关闭
+    toggleSidebar = () => {
+        this.setState((prevState) => ({
+            isSidebarOpen: !prevState.isSidebarOpen,
+        }));
+    };
 
     /** 指向图表对象的引用。 */
     private chartRef: React.RefObject<RelationChart>
@@ -75,7 +86,7 @@ export default class AppMain extends React.Component<any, AppState> {
 
         // 首先弹出一个使用说明。
         Modal.info({
-            title: '欢迎体验社会关系网络演示',
+            title: '社交网络Project',
             okText: '好的',
             closable: true,
             maskClosable: true,
@@ -84,8 +95,10 @@ export default class AppMain extends React.Component<any, AppState> {
                 作者：23计创 王境博 李和沛 唐梓淞<br />
                 Data Structure project - Social network<br />
                 <br />
-                你可以通过点击“下载预制数据集”来进行查看，然后通过“导入”来导入数据集<br />
+                1.推荐先添加组织，然后在添加用户的时候选择相应的组织，也可以选中用户后添加Ta的组织<br />
+                2.你可以通过点击“下载预制数据集”来进行查看，然后通过“导入”来导入数据集<br />
                 <br />
+
             </div>,
             icon: <InfoCircleOutlined style={{ color: MacroDefines.PRIMARY_COLOR }} />
         })
@@ -641,7 +654,7 @@ export default class AppMain extends React.Component<any, AppState> {
             height: '100%',
             left: 12,
             width: 'calc(100% - 36px - 82px)',
-            position: 'absolute',
+            position: 'relative',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
@@ -649,7 +662,9 @@ export default class AppMain extends React.Component<any, AppState> {
         }}>
             <div style={{
                 color: '#fff',
-                fontSize: 16
+                fontSize: 20,
+                alignItems: 'center',
+                justifyContent: 'center'
             }}>{
                     node == null ? '选择组织或个人' : node.name + '（' +
                         (node.tag == NodeTag.PERSON ?
@@ -673,7 +688,8 @@ export default class AppMain extends React.Component<any, AppState> {
                 flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'center',
-                marginTop: 4
+                marginTop: 10,
+                marginBottom:0,
             }}>
                 <Button ghost={node == null}
                     shape='round'
@@ -991,122 +1007,107 @@ export default class AppMain extends React.Component<any, AppState> {
      * React 渲染入口函数。
      */
     override render(): React.ReactNode {
+        return (
+            <div className='pageContainer'>
+                {this.relationListDrawer()}
 
-        return <div className='pageContainer'>
+                <div id='title'>社会关系网络-SCUT-DS-Project</div>
+                <Button
+                    id='downloadDemoProfileBtn'
+                    onClick={() => {
+                        notification.info({
+                            message: '下一步',
+                            description: '点击下方“导入”按钮，选择文件导入。',
+                        });
 
-            {this.relationListDrawer()}
+                        let link = document.createElement('a');
+                        link.href = 'https://github.com/hhhJB/FMDS/raw/refs/heads/main/my-app/%E9%A2%84%E5%88%B6data.sndat';
+                        link.click();
+                    }}
+                    type='primary'
+                    shape='round'
+                    icon={<DownloadOutlined />}
+                >
+                    下载预置数据集
+                </Button>
 
-            <div id='title'>社会关系网络-SCUT-DS-Project</div>
-            <Button
-                id='downloadDemoProfileBtn'
-                onClick={() => {
-                    notification.info({
-                        message: '下一步',
-                        description: '点击下方“导入”按钮，选择文件导入。'
-                    })
+                {/* 侧边栏 */}
+                <div className={`sidebar ${this.state.isSidebarOpen ? 'open' : ''}`}>
+                    <div className="sidebar-content">
+                        <div className='controlAreaContainer'>
+                            <div className='NodeBoxWrapper'>
+                                {this.generateNodeBoxes()}
+                            </div>
 
-                    let link = document.createElement('a')
-                    link.href = 'https://hwc.gardilily.com/socialnet/样例数据.sndat'
-                    link.click()
-                }}
-                type='primary'
-                shape='round'
-                icon={<DownloadOutlined />}
-            >
-                下载预置数据集
-            </Button>
 
-            <div className='elementContainer'>
-                <div className='controlAreaContainer'>
+                            <div className='functionArea normalCard'>
+                                <div className='nodeDataBoxWrapper'>
+                                    {this.nodeDataBox()}
+                                </div>
 
-                    {this.generateNodeBoxes()}
+                                <div className='functionArea'>
+                                    <Upload
+                                        beforeUpload={(file, fileList): boolean => {
+                                            this.importFile(file);
+                                            return false;
+                                        }}
+                                        showUploadList={false}
+                                        maxCount={1}
+                                        accept='.sndat'
+                                    >
+                                        <Button
+                                            type='primary'
+                                            shape='round'
+                                            icon={<ImportOutlined />}
+                                        >
+                                            导入数据
+                                        </Button>
+                                    </Upload>
 
-                    <div className='functionArea normalCard'>
-
-                        { /* 个人或组织信息卡片。 */}
-                        {this.nodeDataBox()}
-
-                        { /* 导入导出按钮。 */}
-                        <div style={{
-                            width: 82,
-                            height: '100%',
-                            position: 'absolute',
-                            right: 12,
-                            display: 'flex',
-                            flexDirection: 'column',
-                            justifyContent: 'center'
-                        }}>
-                            <Upload
-                                beforeUpload={(file, fileList): boolean => {
-                                    this.importFile(file)
-                                    return false // 不做 http 上传。
-                                }}
-                                showUploadList={false}
-                                maxCount={1}
-                                accept='.sndat'
-                            >
-                                <Button type='primary'
-                                    style={{
-                                        width: '100%',
-                                        boxShadow: '0px 4px 10px #0005'
-                                    }}
-                                    shape='round'
-                                    icon={<ImportOutlined />}
-                                    onClick={
-                                        () => {
-                                            // todo
-                                        }
-                                    }
-                                >导入</Button>
-                            </Upload>
-
-                            <Button type='primary'
-                                style={{
-                                    width: '100%',
-                                    boxShadow: '0px 4px 10px #0005',
-                                    marginTop: 10
-                                }}
-                                shape='round'
-                                icon={<SaveOutlined />}
-                                onClick={
-                                    () => {
-                                        let jstring = JSON.stringify(
-                                            this.nodeManager.toJsonableObject()
-                                        )
-
-                                        let blob = new Blob(
-                                            [jstring], {
-                                            type: 'application/octet-stream'
-                                        }
-                                        )
-
-                                        let url = URL.createObjectURL(blob)
-                                        let link = document.createElement('a')
-                                        link.href = url
-                                        link.download = '关系网络导出.sndat'
-                                        link.click()
-
-                                        message.info('导出成功，请保存。')
-
-                                        window.URL.revokeObjectURL(url)
-                                    }
-                                }
-                            >导出</Button>
-
+                                    <Button
+                                        type='primary'
+                                        shape='round'
+                                        icon={<SaveOutlined />}
+                                        onClick={() => {
+                                            let jstring = JSON.stringify(this.nodeManager.toJsonableObject());
+                                            let blob = new Blob([jstring], { type: 'application/octet-stream' });
+                                            let url = URL.createObjectURL(blob);
+                                            let link = document.createElement('a');
+                                            link.href = url;
+                                            link.download = '关系网络导出.sndat';
+                                            link.click();
+                                            message.info('导出成功，请保存。');
+                                            window.URL.revokeObjectURL(url);
+                                        }}
+                                    >
+                                        导出数据
+                                    </Button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <RelationChart style={{
-                    borderRadius: '12px',
-                    background: '#eef7f2af',
-                    width: '49.2%',
-                    height: '100%',
-                    marginLeft: '1.4%',
-                    boxShadow: '0px 4px 10px #0005'
-                }} ref={this.chartRef} />
+                {/* 侧边栏图标 */}
+                <div className="sidebar-toggle-icon" onClick={this.toggleSidebar}>
+                    <MenuUnfoldOutlined />
+                </div>
+
+                <div className='elementContainer'>
+                    <RelationChart
+                        style={{
+                            borderRadius: '16px',
+                            background: '#eef7f2af',
+                            width: '95%',
+                            height: '100%',
+                            marginLeft: '1.4%',
+                            boxShadow: '0px 4px 10px #0005',
+                        }}
+                        ref={this.chartRef}
+                    />
+                </div>
             </div>
-        </div>
+        );
     }
 
     /**

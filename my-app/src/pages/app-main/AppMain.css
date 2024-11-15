@@ -13,14 +13,16 @@
     width: 100vw;
     height: 100vh;
 
-    background: #86aee9;
+    background: #79a6eb;
 }
 
 #title {
     color: #fff;
-    font-size: 24px;
+    font-size: 35px;
     position: absolute;
-    left: 24px;
+    align-items: center;
+    justify-content: center;
+    left: 42%;
     top: 18px;
 }
 
@@ -32,43 +34,93 @@
 }
 
 .elementContainer {
-    width: 96vw;
+    width: 103vw;
     height: 86vh;
     position: absolute;
     bottom: 4vh;
     display: flex;
     flex-direction: row;
+    align-items: center;
+    gap: 0px;
+    left: 0;
 }
 
 /*nodebox的container*/
 .controlAreaContainer {
-    width: 29.2%;
+    width: 80%;
     height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
+}
+
+.NodeBoxWrapper {
+    width: 100%;
+    height: 72%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    /* margin-top: auto; */
+}
+
+.nodeDataBoxWrapper {
+    max-height: 100px;
+    /* 设置最大高度限制 */
+    overflow-y: auto;
+    /* 如果内容超出，显示滚动条 */
+    width: 100%;
+    margin-bottom: 10px;
+    /* 确保下方按钮不被挤压 */
+    display: flex;
+    flex-direction: column;
+    /* 垂直排列 */
+    gap: 20px;
+    /* 控制卡片之间的间距 */
 }
 
 /*节点box*/
 .nodeBox {
-    width: 49.2%;
+    width: 48.2%;
     height: 100%;
     display: flex;
     flex-direction: column;
     position: relative;
+    /* margin-bottom: 20px; */
+    margin-top: 20px;
+}
+
+.functionArea .ant-btn {
+    box-shadow: 0px 4px 10px #0005;
+    width: 180px;
+    border-radius: 12px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .functionArea {
     width: 100%;
-    height: 18.2%;
     position: relative;
+    display: flex;
+    flex-direction: column;
+    /* 使按钮垂直排列 */
+    gap: 15px;
+    /* 按钮之间的间距 */
+    align-items: center;
 }
 
 .normalCard {
     box-shadow: 0px 4px 10px #0005;
-    border-radius: 12px;
-    background: #c4d7d67f;
+    border-radius: 22px;
+    background: #a9e6e37f;
+    flex-direction: column;
+    display: flex;
+    justify-content: flex-start;
+    /* 确保内容从顶部开始 */
+    margin-top: 20px;
+    /* 添加适当的间距 */
 }
 
 .scrollY {
@@ -96,17 +148,19 @@
 .nodeCard {
     box-shadow: 0px 4px 10px #0005;
     border-radius: 12px;
-    background: #86aee9;
+    background: #a2bade;
     color: #fff;
     width: calc(100% - 12px);
-    height: 60px;
-    display: inline-flex;
+    height: 50px;
+    display: flex;
+    /* 改为 flex 布局，垂直居中 */
     justify-content: center;
     align-items: center;
-    font-size: 18px;
+    font-size: 20px;
     margin-left: 6px;
     margin-right: 6px;
     margin-top: 12px;
+    /* 可以减少，避免间距过大 */
 }
 
 .nodeCard:active {
@@ -114,5 +168,68 @@
 }
 
 .nodeCard:hover {
-    background: #077db8af;
+    background: #55b2e0af;
+}
+
+/* 侧边栏样式 */
+.sidebar {
+    position: fixed;
+    top: 0;
+    right: -5%;
+    /* 初始位置在屏幕外 */
+    width: 5%;
+    /* 初始宽度 */
+    height: 100vh;
+    background-color: #CDE1EF;
+    transition: right 0.4s ease-in-out, width 0.4s ease-in-out;
+    /* 设置过渡属性 */
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar.open {
+    right: 0;
+    /* 打开时滑动到页面内 */
+    width: 40%;
+    /* 打开后的宽度 */
+}
+
+/* 侧边栏内容 */
+.sidebar-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    opacity: 0;
+    transition: opacity 0.3s ease-in;
+    /* 内容淡入效果 */
+    flex-grow: 1;
+    /* 使内容区域充满剩余空间 */
+}
+
+.sidebar.open .sidebar-content {
+    opacity: 1;
+}
+
+/* 悬浮图标按钮样式 */
+.sidebar-toggle-icon {
+    position: fixed;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    font-size: 24px;
+    color: #333;
+    background-color: #f0f0f0;
+    border-radius: 8px 0px 0px 8px;
+    padding: 8px;
+    cursor: pointer;
+    z-index: 1100;
+    transition: right 0.4s ease-in-out;
+}
+
+.sidebar.open~.sidebar-toggle-icon {
+    right: 40%;
+    /* 图标按钮随侧边栏移动 */
 }
