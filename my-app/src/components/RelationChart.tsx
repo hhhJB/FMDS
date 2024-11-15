@@ -6,6 +6,7 @@ import React, { CSSProperties } from 'react'
 import * as echarts from 'echarts'
 import { NodeBase, NodeTag } from '../data-structure/NodeBase'
 import { FreeKeyObject } from '../data-structure/FreeKeyObject'
+import { FontSizeOutlined } from '@ant-design/icons'
 
 export interface RelationChartProps {
     style?: CSSProperties
@@ -111,7 +112,11 @@ export class RelationChart extends React.Component<RelationChartProps> {
             title: {
                 text: '全局关系图',
                 top: 'bottom',
-                left: 'right'
+                left: 'left',
+                textStyle: {
+                    fontSize: 30, // 调整标题字体大小
+                    fontWeight: 'bold', // 调整标题字体粗细
+                }
             },
 
             // 鼠标覆盖显示内容。
@@ -175,7 +180,7 @@ export class RelationChart extends React.Component<RelationChartProps> {
                 label: {
                     show: true,
                     position: 'right',
-                    formatter: '{c}'
+                    formatter: '{c}',
                 },
 
                 links: links,
@@ -269,7 +274,11 @@ export class RelationChart extends React.Component<RelationChartProps> {
             title: {
                 text: node.name + '的社交网络图',
                 top: 'bottom',
-                left: 'left'
+                left: 'left',
+                textStyle: {
+                    fontSize: 30, // 调整标题字体大小
+                    fontWeight: 'bold', // 调整标题字体粗细
+                }
             },
 
             // 鼠标覆盖显示内容。
@@ -280,7 +289,11 @@ export class RelationChart extends React.Component<RelationChartProps> {
 
             legend: {
                 x: 'center',
-                show: true
+                show: true,
+                textStyle: {
+                    fontSize: 25, // 调整标题字体大小
+                    fontWeight: 'bold', // 调整标题字体粗细
+                }
             },
 
             series: [{
@@ -340,7 +353,7 @@ export class RelationChart extends React.Component<RelationChartProps> {
                     opacity: 0.9,
                     width: 1,
                     curveness: 0
-
+                    
                 },
 
 
