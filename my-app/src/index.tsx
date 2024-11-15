@@ -1,22 +1,27 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
+/*
+ * React 网页根引导工具。
+ */
 
-const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
-root.render(
-    <App /> // app主页对象。
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import './index.css'
+import AppMain from './pages/app-main/AppMain'
+
+import 'antd/dist/antd.variable.min.css' // 开启 ant design.
+import { ConfigProvider } from 'antd'
+import { MacroDefines } from './MacroDefines'
+
+const root = ReactDOM.createRoot(
+  document.getElementById('root') as HTMLElement
 );
 
-// 配置主题 没定义颜色，暂时先不弄
-// ConfigProvider.config({
-//     theme: {
-//       primaryColor: MacroDefines.PRIMARY_COLOR
-//     }
-//   })
+// 配置主题。
+ConfigProvider.config({
+  theme: {
+    primaryColor: MacroDefines.PRIMARY_COLOR
+  }
+})
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-
-// reportWebVitals();
+root.render(
+  <AppMain /> // app主页对象。
+)
