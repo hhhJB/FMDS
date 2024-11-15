@@ -1,7 +1,5 @@
 /*
  * 个人节点。
- * 2051565 
- * 创建于 2022年7月20日。
  */
 
 import { FreeKeyObject } from "./FreeKeyObject"

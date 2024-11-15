@@ -1,7 +1,5 @@
 /*
  * 关系网络展示图。基于 Apache ECharts。
- * 2051565 
- * 创建于 2022年7月20日。
  */
 
 import React, { CSSProperties } from 'react'

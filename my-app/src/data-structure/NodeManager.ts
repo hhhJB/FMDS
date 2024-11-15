@@ -1,7 +1,5 @@
 /*
  * 节点管理器。
- * 2051565 
- * 创建于 2022年7月21日。
  */
 
 import { FreeKeyObject } from "./FreeKeyObject"
