@@ -8453,7 +8453,7 @@ slash@^4.0.0:
     "@types/node" "^16.7.13"
     "@types/react" "^18.0.0"
     "@types/react-dom" "^18.0.0"
-    antd "^4.21.7"
+    antd "^4.24.16"
     echarts "^5.3.3"
     react "^18.2.0"
     react-dom "^18.2.0"
