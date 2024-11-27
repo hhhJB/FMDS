@@ -29,9 +29,6 @@ type AppState = {
     isSidebarOpen: boolean;
 }
 
-/**
- * 应用主页。含大部分逻辑。
- */
 export default class AppMain extends React.Component<any, AppState> {
     state: AppState = {
         nodeSelected: null,
@@ -47,7 +44,6 @@ export default class AppMain extends React.Component<any, AppState> {
         }));
     };
 
-    /** 指向图表对象的引用。 */
     private chartRef: React.RefObject<RelationChart>
 
     /**
@@ -68,10 +64,6 @@ export default class AppMain extends React.Component<any, AppState> {
 
     /**
      * 好友推荐列表是否过期。
-     * 仅当过期时，在打开抽屉时更新列表。
-     * 
-     * 在推荐页添加好友后，要通过强制刷新使刚添加的好友从推荐列表离开。
-     * 但是重新渲染可能会导致推荐列表被重新计算，从而被打乱，因此加入简单的缓存和锁机制。
      */
     private recommendListExpired = true
 
@@ -689,7 +681,7 @@ export default class AppMain extends React.Component<any, AppState> {
                 alignItems: 'center',
                 justifyContent: 'center',
                 marginTop: 10,
-                marginBottom:0,
+                marginBottom: 0,
             }}>
                 <Button ghost={node == null}
                     shape='round'
